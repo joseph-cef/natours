@@ -2,14 +2,14 @@ const experss = require('express');
 
 const app = experss();
 
-app.get('/', (req, res) => {
+// app.get('/', (req, res) => {
     
-    res.status(200).json({message: 'Hello from the server side!' , app: 'Natours'});
-});
+//     res.status(200).json({message: 'Hello from the server side!' , app: 'Natours'});
+// });
 
-app.post('/', (req, res) => {
-    res.send('You can post to this endpoint...');
-});
+// app.post('/', (req, res) => {
+//     res.send('You can post to this endpoint...');
+// });
 
 
 const port = 3000;
