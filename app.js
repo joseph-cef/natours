@@ -1,32 +1,31 @@
-const fs = require('fs');
-const experss = require('express');
+const express = require('express');
+const morgan = require('morgan');
 
-const app = experss();
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
-// app.get('/', (req, res) => {
-    
-//     res.status(200).json({message: 'Hello from the server side!' , app: 'Natours'});
-// });
+const app = express();
 
-// app.post('/', (req, res) => {
-//     res.send('You can post to this endpoint...');
-// });
+// 1) MIDDLEWARES
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
-const tours =  JSON.parse(
-    fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
-);
+app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
-
-app.get('/api/v1/tours', (req, res) => {
-res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-        tours: tours
-    }
+app.use((req, res, next) => {
+  console.log('Hello from the middleware 👋');
+  next();
 });
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
 });
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running ... `);
-});
+
+// 3) ROUTES
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+module.exports = app;
